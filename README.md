@@ -6,6 +6,7 @@ Proyek ini merupakan pengembangan sistem deteksi kebakaran dini yang memanfaatka
 ### Hardware:
 ESP8266: Berfungsi sebagai mikrokontroler yang mengolah data dari sensor dan mengirimkannya ke Firebase melalui Wi-Fi.
 Sensor DHT11: Mengukur suhu dan kelembaban udara.
+
 Sensor MQ-135: Mendeteksi gas berbahaya dan asap.
 LED Indikator: Menyala secara otomatis sebagai peringatan fisik ketika terdeteksi kondisi berbahaya.
 
