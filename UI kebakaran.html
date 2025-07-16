@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Monitoring Kebakaran IoT</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+      body {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        background-color: #f5f7fa;
+        color: #333;
+        text-align: center;
+        padding: 30px;
+      }
+      h1 {
+        font-size: 36px;
+        color: #2c3e50;
+      }
+      .status {
+        font-size: 22px;
+        margin-top: 15px;
+        font-weight: bold;
+        color: #d35400;
+      }
+      .data-display {
+        margin: 20px auto;
+        max-width: 400px;
+        padding: 20px;
+        background: white;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        border-radius: 10px;
+      }
+      canvas {
+        max-width: 600px;
+        margin: 40px auto;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Status Monitoring Kebakaran</h1>
+    <div class="data-display" id="data"></div>
+
+    <canvas id="chartCanvas"></canvas>
+
+    <script>
+      const url = "https://uas-io-default-rtdb.firebaseio.com/.json";
+      const suhuData = [];
+      const kelembapanData = [];
+      const kualitasData = [];
+      const waktuData = [];
+
+      const ctx = document.getElementById("chartCanvas").getContext("2d");
+      const chart = new Chart(ctx, {
+        type: "line",
+        data: {
+          labels: waktuData,
+          datasets: [
+            {
+              label: "Suhu (°C)",
+              data: suhuData,
+              borderColor: "#e74c3c",
+              fill: false,
+              tension: 0.3,
+            },
+            {
+              label: "Kelembapan (%)",
+              data: kelembapanData,
+              borderColor: "#3498db",
+              fill: false,
+              tension: 0.3,
+            },
+            {
+              label: "Kualitas Udara",
+              data: kualitasData,
+              borderColor: "#2ecc71",
+              fill: false,
+              tension: 0.3,
+            },
+          ],
+        },
+        options: {
+          responsive: true,
+          scales: {
+            x: {
+              title: {
+                display: true,
+                text: "Waktu",
+              },
+            },
+            y: {
+              beginAtZero: true,
+              title: {
+                display: true,
+                text: "Nilai Sensor",
+              },
+            },
+          },
+        },
+      });
+
+      async function ambilData() {
+        try {
+          const res = await fetch(url);
+          const data = await res.json();
+
+          const waktu = new Date().toLocaleTimeString();
+
+          suhuData.push(data.suhu);
+          kelembapanData.push(data.kelembapan);
+          kualitasData.push(data.kualitas_udara);
+          waktuData.push(waktu);
+
+          if (suhuData.length > 10) {
+            suhuData.shift();
+            kelembapanData.shift();
+            kualitasData.shift();
+            waktuData.shift();
+          }
+
+          document.getElementById("data").innerHTML = `
+            <p><strong>Suhu:</strong> ${data.suhu} °C</p>
+            <p><strong>Kelembapan:</strong> ${data.kelembapan}%</p>
+            <p><strong>Kualitas Udara (MQ-135):</strong> ${data.kualitas_udara}</p>
+            <p class="status"><strong>Status:</strong> ${data.status}</p>
+          `;
+
+          chart.update();
+        } catch (error) {
+          console.error("Gagal mengambil data:", error);
+        }
+      }
+
+      ambilData();
+      setInterval(ambilData, 5000);
+    </script>
+  </body>
+</html>
