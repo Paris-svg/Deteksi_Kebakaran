@@ -23,5 +23,6 @@ Pengguna dapat memantau data tersebut secara
 real-time melalui antarmuka web.
 Sistem akan memberikan respons otomatis jika suhu melebihi 50∘ C atau kadar gas melebihi 1000 ppm. Respons ini berupa indikator LED yang menyala pada perangkat keras dan perubahan status "Aman" menjadi "Bahaya" pada antarmuka web.
 ![image](image/aman.png)
+![image](image/bahaya.png)
 ## Manfaat Proyek:
 Proyek ini membuktikan bahwa sistem deteksi kebakaran dini yang terjangkau dan efektif dapat dibangun menggunakan kombinasi perangkat keras yang efisien dan platform cloud. Sistem ini memberikan solusi pemantauan jarak jauh yang dapat meningkatkan keselamatan di lingkungan rumah tangga atau bangunan kecil menengah.
